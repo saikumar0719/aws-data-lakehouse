@@ -1,0 +1,24 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run pipeline
+        env:
+          PYTHONPATH: .
+        run: python run_pipeline.py
+      - name: Run tests
+        env:
+          PYTHONPATH: .
+        run: python -m pytest -q
+      - name: Compile all Python files
+        run: python -m py_compile src/*.py tests/*.py airflow/dags/*.py run_pipeline.py

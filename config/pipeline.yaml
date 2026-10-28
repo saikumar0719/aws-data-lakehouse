@@ -1,0 +1,15 @@
+# Lakehouse configuration (local mirror of the AWS layout)
+bronze:
+  format: parquet
+  partition_cols: [year, month, day]
+  s3_key_template: "orders/year={year}/month={month}/day={day}/"
+silver:
+  format: parquet
+  dedup_key: order_id
+  dedup_order: updated_at
+gold:
+  tables: [daily_revenue, customer_revenue, product_revenue]
+  formats: [parquet, csv]
+quality:
+  fail_on_breach: true
+  report: outputs/quality_report.json
